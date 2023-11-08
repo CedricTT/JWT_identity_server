@@ -37,9 +37,9 @@ public class JwtService {
                 .compact();
     }
 
-    public boolean verifyToken(String token, UserDetails userDetails) {
+    public boolean verifyToken(String token, String username) {
         Jws<Claims> jws = extractAllClaims(token);
-        return (userDetails.getUsername().equals(jws.getPayload().getSubject()) && !isTokenExpired(jws));
+        return (username.equals(jws.getPayload().getSubject()) && !isTokenExpired(jws));
     }
 
     private Jws<Claims> extractAllClaims(String token) {

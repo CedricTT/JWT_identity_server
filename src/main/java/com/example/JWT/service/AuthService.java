@@ -7,6 +7,8 @@ import com.example.JWT.model.response.AuthenticationResponse;
 import com.example.JWT.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +36,16 @@ public class AuthService {
                 .builder()
                 .accessToken(jwtToken)
                 .build();
+    }
+
+    public String generateToken(String username) {
+        UserDetails user = repository.findByEmail(username).orElseThrow(
+                () -> new UsernameNotFoundException("User not found")
+        );
+        return jwtService.generateToken(user);
+    }
+
+    public String validToken(String authorization, String username) {
+        return String.valueOf(jwtService.verifyToken(authorization, username));
     }
 }
